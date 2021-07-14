@@ -2,7 +2,7 @@ package dia13_projeto_codersBank;
 
 public class Gerente {
 
-    private String senha = "1234";
+    private String senha = "%a1517";
 
     public String getSenha() {
         return senha;
