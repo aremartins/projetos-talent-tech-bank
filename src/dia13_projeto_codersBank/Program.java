@@ -62,8 +62,10 @@ public class Program {
 				}
 				System.out.print("Digite o depósito inicial: ");
 				double initialDeposit = sc.nextDouble();
+                Cliente client = new Cliente(clientName, cpf, occupation);
+
 				if (accountType.equals("CC")) {
-					bank.addAccount(new ContaCorrente(new Cliente(clientName, cpf, occupation), initialDeposit));
+                    bank.addAccount(new ContaCorrente(client, initialDeposit, 300.0));					
 				} else {
 					bank.addAccount(new ContaPoupanca(new Cliente(clientName, cpf, occupation), initialDeposit));
 				}
@@ -112,6 +114,7 @@ public class Program {
 				break;
 			case 2:
 				account.listarExtrato();
+				account.showStatement();
 				break;
 			case 3:
 				// realizar saque
@@ -148,8 +151,24 @@ public class Program {
 				}
 				break;
 			case 6:				
-				//Adicionar limite cheque especial
-				break;
+				 if (account instanceof ContaCorrente) {
+                     System.out.println("Solicite um valor maior de cheque especial");
+                     System.out.printf("Seu valor atual é %.2f%n",
+                             ((ContaCorrente) account).getOverdraft());
+                     System.out.print("Novo valor: ");
+                     double newOverdraft = sc.nextDouble();
+                     System.out.println("Simulação gerente aprovando e digitando a senha ...");
+                     System.out.print("Digite a senha gerente: ");
+                     String password = sc.next();
+                     try {
+                         ((ContaCorrente) account).setOverdraft(newOverdraft, password);
+                     } catch (Exception e) {
+                         System.out.println(e.getMessage());
+                     }
+                 } else {
+                     System.out.println("Função indisponível para conta poupança");
+                 }
+                 break;
 			case 7:
 				System.out.println("Tem certeza que deseja encerrar a conta [s/N]?");
 				if (sc.next().charAt(0) == 's') {

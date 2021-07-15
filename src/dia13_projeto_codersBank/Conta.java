@@ -8,7 +8,9 @@ public abstract class Conta {
 	private int numero = random.nextInt(9999);
 	protected double saldo;
 	private Cliente cliente;
-	private Gerente gerente;
+	protected Manager manager;
+    protected Statement statement = new Statement();
+
 	
 
 	private double somaDeposito = 0;
@@ -30,14 +32,6 @@ public abstract class Conta {
 		this.cliente = cliente;
 	}
 	
-	public Gerente getGerente() {
-		return gerente;
-	}
-
-	public void setGerente(Gerente gerente) {
-		this.gerente = gerente;
-	}
-
 	@Override
 	public String toString() {
 		return "Conta [random=" + random + ", numero=" + numero + ", saldo=" + saldo + ", titular=" + cliente + "]";
@@ -50,6 +44,7 @@ public abstract class Conta {
 		this.saldo += valor;
 		System.out.println("******Depósito realizado com sucesso!*******");
 		this.somaDeposito += valor;
+		this.statement.addTransaction(valor);
 	}
 
 	public void saca(double valor) throws Exception {
@@ -60,6 +55,7 @@ public abstract class Conta {
 			throw new Exception("Seu saldo não é suficiente!");
 		} else {
 			this.saldo -= valor;
+			this.statement.addTransaction(-valor);
 			System.out.println("******Saque realizado com sucesso!*******");
 
 		}
@@ -73,6 +69,7 @@ public abstract class Conta {
 		this.saldo -= valor;
 		destino.deposita(valor);
 		this.somaTransferencias += valor;
+		this.statement.addTransaction(-valor);
 		System.out.println("******Transferência realizada com sucesso!*******");
 
 	}
@@ -96,14 +93,10 @@ public abstract class Conta {
 		System.out.println("Saldo atual :" + this.getSaldo());
 		System.out.println("*********************************************");
 	}
+	
+	 public void showStatement() {
+	        this.statement.showTransactions();
+	    }
 
-	public void adicionarLimite(double valor, String senha){
-        if(getGerente().getSenha().equals(senha)){
-            this.saldo = valor;
-            System.out.println("Limite alterado com sucesso.");
-        }else{
-            System.out.println("Senha incorreta. Limite não foi alterado.");
-        }
-    }
 
 }
